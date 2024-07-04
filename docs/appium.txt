@@ -1,0 +1,148 @@
+# my first documentation written in one go on Jul 4 2024
+# orignal documentation without any correction or changes 
+
+Programming Language: Python
+Framework: PyTest
+
+Introduction 
+    In his we will 
+
+Requirements
+    Python: 
+    os Windows, linux, or mac (ubuntu used in his tutorial)
+
+    Installation
+        assume that you already installed requirements then you just have to run below command in termin
+            "appium:app": "",
+            "appium:appPackage": "",
+            "appium:appActivity": "com.zoontek.rnbootsplash.RNBootSplashActivity",
+            "appium:appWaitActivity": "com.zoontek.rnbootsplash.RNBootSplashActivity",
+        ``` npm i --location=global appium ```
+        to run appim just run 
+        ``` appium   ```
+        you will get some thing similar to his 
+        <img>
+
+        now we will install appium inspector to get path or selector for ui elements
+        just to his url ``` https://github.com/appium/appium-inspector/releases ```
+        and download os support , if you are using ubuntu install x86_64.AppImage
+
+        Note if you are using ubuntu 24 with basic (Minimal Installation) then install ``` sudo apt install libfuse2 ``` to open app with click
+
+        the we need androidSDK to run appium inspector. to make thins pretty simple will just install android studio which will hall every thing we need.
+        if you don't have adb you can install it with apt ``` apt install adb ```
+        adb help to list all connected devices to system. adb is command line tool which help to communicate with devices
+
+Getting ui elements from Appium inspector
+    You can use emulator or real devices here i will use real devices but things will pretty similar to what we will do here.
+    after connecting device, we run ``` adb devices ``` to get list of all connected devices with there uuid 
+
+    now we create device capabilities witch will contain some basic components like device 'platformName, deviceName, platformVersion, automationName ..etc'
+    you can learn more about it here 'https://appium.io/docs/en/2.1/guides/caps/'
+
+    for emulator
+    ```
+    {
+        "platformName": "Android",
+        "platformVersion": "11.0",
+        "deviceName": "Pixel 7 API 30",
+        "automationName": "UiAutomator2",
+        "autoLaunch": false
+    }
+    ```
+    for real device
+    ```
+    {
+        "platformName": "Android",
+        "appium:platformVersion": "11",
+        "appium:deviceName": "POCO M2 Reloaded",
+        "appium:automationName": "UiAutomator2",
+        "appium:autoLaunch": false
+    }
+    ```
+    NOTE: is you change port of appium then update it port section and same with path you have to add in path section generally path will '/wd/hd'
+    after that click on 'Start Session'
+
+    1) click on start recording icon ( if you are running appium to it's default)
+    2) on Source section you have 'App Source and Selected elements' 
+        a) in 'App Source' you will get ui elements Source
+        b) and in 'Selected Elements' some tool witch will you have record and interact with elements
+            you will also have some properties like xpath, attribute and index etc with these properties you will 
+            connected to device while running automation
+
+Appium Inspector:
+    <img>
+    In above image there is a no witch related to each of one of elements or part of appium inspector. Below there is some points with no witch 
+    describe information about above elements with same no.
+    1) Remote Host: if you are just running 'appium' then you can leave it blank (default value will automatically taken) if you want to use some 
+    specific address , then write here, by using his command you can change address ' --address address_name ' default adress '172.0.0.1' 
+    2) Remote Port: leave blank for default and  appium use 4723 port by default, if you want to use another port you have to add ---port port_no at end of command write here that 
+    prot no
+    3)Remote Path: again leave blank for default and it use '/' path, to change path '--base-path=path_name' generally we use '/wd/hub' path 
+    4) Appium Server: if you are using appium server witch we are doing, then we are select his option
+    5) Select Cloud Provider: Here you will select cloud provider who prove remote devices. There are some LambdaTest, BrowserStack and sourceLab etc
+    which provide cloud devices for automation. These type of services help in production environment of automation. And we are going to use LambdaTest
+    in further tutorial if you want to select then you are good to go.
+    6) LambdaTest: We Selected LambdaTest on above stage that why it components
+    7) Capability Builder: here you will add information about device witch will you select for further procedure (we clear it in 'Getting ui elements from Appium inspector')
+    8) Saved Capability Sets: In 13th section you write your device capabilities, and you can do so by clicking button at 14th section then click on save as button 
+    section no 11th. After that you will see you saved capability here.
+    9)Attach to Sessions: If you are using other device on same appium server you can directly select it form here it will automatically listed here
+    12)you can add capabilities by clicking here and select wich type of obj you wan to enter e.g str, bool, etc
+    13) His bool value will add any other files which will need during appium run.
+
+    Automation script:
+        ```
+        from appium.options.common.base import AppiumOptions
+        from appium import webdriver
+
+        options = AppiumOptions()
+        options.load_capabilities({
+            "platformName": "android",
+            "appium:deviceName": "",
+            "appium:platformVersion": "1,
+            .
+            .
+            ...
+        })
+
+        driver = webdriver.Remote(<appium url>, options=options)
+        ```
+        in above code we will create driver will will further used, firstly we create option with capabilities then we will add it to webdriver
+        
+        NOTE: in place of <appium url> you can use 'http://172.18.0.2:4723/' if you default options for appium
+
+        now we can write a simple automation script to login an application 
+
+        ```
+        from appium.webdriver.common.appiumby import AppiumBy
+
+        def test_login():
+            # click on button
+            driver.find_elements(by=AppiumBy.ID, value="android:id/button1").click()
+            # enter email init
+            driver.find_elements(by=AppiumBy.ANDROID_UIAUTOMATOR, value="new UiSelector().text(\"Enter Email Address\")").send_keys('email@test.com')
+            # enter password
+            driver.find_elements(by=AppiumBy.ANDROID_UIAUTOMATOR, value="new UiSelector().text(\"Password")").send_keys(***********)
+            # click on login button 
+            driver.find_elements(by=AppiumBy.ID, value="login").click()
+        ```
+        before running make sure that appium in running and you have correct appium url 
+        
+        driver.find_elements will find/select elements on screen by given selector ``` by=AppiumBy.ID ``` here i have user id selector, appium will search elements
+        with id 'value="android:id/button1")' then it will click on it. similarly it will enter email and password then click on login button
+
+How to use LambdaTest for automation:
+    1) Integrating LambdaTest with appium you have to just add UserName and LambdaTest Access Key, next things similar to above steps. How to get userName 
+    and AccessKey, in further tutorial.
+    Note: For lambdatest capabilities you can go to 'https://www.lambdatest.com/capabilities-generator/'
+    2) Automation TestScript:
+        Just you have to change appium url to "https://<username>:<accessKey>@mobile-hub.lambdatest.com/wd/hub" just add your username and accessKey. After that 
+        every thing will same and you will good to go 
+    3) How to get userName and AccessKey
+        a) Login to LambdaTest then go dashboard
+        b) Method 1:
+            -> In dashboard at right-lowe side you see key icon click on it. After that you can get your credentials.
+        c) Method 2:
+            -> Go to Settings ---> AccountSettings ---> Password & security here you find you credentials. 
+
