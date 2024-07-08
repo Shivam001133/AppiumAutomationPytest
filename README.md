@@ -50,5 +50,5 @@ This project demonstrates how to use pytest for running Appium-based tests on de
 
 ## License
 
-This project is licensed under the MIT License. See the <a href="[https://www.w3schools.com](https://github.com/Shivam001133/AppiumAutomationPytest/blob/main/LICENSE)">LICENSE</a> file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/Shivam001133/AppiumAutomationPytest/blob/main/LICENSE) file for details.
 
